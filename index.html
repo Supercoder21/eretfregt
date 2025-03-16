@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>thedoctorsarewatching</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background-color: #000;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Background blobs */
+        .blob-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, #333 0%, transparent 70%);
+            opacity: 0.3;
+        }
+
+        .blob-1 {
+            top: 25%;
+            left: 25%;
+            width: 50%;
+            height: 50%;
+            animation: blobPulse 8s infinite ease-in-out;
+        }
+
+        .blob-2 {
+            top: 33%;
+            right: 25%;
+            width: 33%;
+            height: 66%;
+            opacity: 0.2;
+            animation: blobPulse 12s infinite ease-in-out;
+        }
+
+        .blob-3 {
+            bottom: 25%;
+            left: 33%;
+            width: 66%;
+            height: 33%;
+            opacity: 0.25;
+            animation: blobPulse 15s infinite ease-in-out;
+        }
+
+        @keyframes blobPulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+        }
+
+        /* Texture overlay */
+        .texture {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Vignette */
+        .vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 30%, #000 100%);
+            opacity: 0.7;
+        }
+
+        /* Eyes container */
+        .eyes-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Eye styles */
+        .eye {
+            position: absolute;
+            opacity: 0;
+            transition: all 0.5s ease;
+            cursor: pointer; /* Make eyes clickable */
+        }
+
+        .eye:hover {
+            transform: scale(1.05) !important; /* Slight scale effect on hover */
+            filter: brightness(1.2); /* Brighten on hover */
+        }
+
+        .eye-outline {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            transition: all 0.3s ease-out;
+        }
+
+        .eye-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+        }
+
+        .pupil {
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.2s ease;
+        }
+
+        .pupil-highlight {
+            position: absolute;
+            border-radius: 50%;
+            background-color: #fff;
+            opacity: 0.7;
+        }
+
+        .eye-twinkle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        /* Eye animations */
+        @keyframes twinkle-1 {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes twinkle-2 {
+            0%, 100% { opacity: 0.3; }
+            30% { opacity: 0.7; }
+            70% { opacity: 0.5; }
+        }
+
+        @keyframes twinkle-3 {
+            0% { opacity: 0.1; }
+            40% { opacity: 0.6; }
+            60% { opacity: 0.4; }
+            100% { opacity: 0.2; }
+        }
+
+        /* Power button */
+        .power-button-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes spin-reverse {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-540deg); }
+        }
+
+        .power-button {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(127, 29, 29, 0.8);
+            border: 2px solid #b91c1c;
+            color: #fecaca;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            text-decoration: none; /* Remove underline from link */
+        }
+
+        .power-button:hover {
+            background-color: rgba(153, 27, 27, 0.8);
+            transform: scale(1.1);
+        }
+
+        .power-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .power-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none; /* Make sure this doesn't interfere with clicks */
+        }
+
+        .power-button:hover .power-glow {
+            opacity: 1;
+        }
+
+        .power-label {
+            position: absolute;
+            bottom: -50px;
+            text-align: center;
+            font-family: monospace;
+            letter-spacing: 2px;
+            color: #ef4444;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            pointer-events: none; /* Make sure this doesn't interfere with clicks */
+        }
+
+        .power-button:hover + .power-label {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Background -->
+        <div class="blob-background">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+        </div>
+        <div class="texture"></div>
+        <div class="vignette"></div>
+
+        <!-- Eyes Container -->
+        <div class="eyes-container" id="eyesContainer"></div>
+
+        <!-- Power Button -->
+        <div class="power-button-container">
+            <div class="loading-ring-outer"></div>
+            <div class="loading-ring-inner"></div>
+            <div class="gray-circle"></div>
+            <a href="https://your-restart-button-link.com" class="power-button" id="powerButton">
+                <svg class="power-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                    <line x1="12" y1="2" x2="12" y2="12"></line>
+                </svg>
+                <div class="power-glow"></div>
+            </a>
+            <div class="power-label">Again... Again... Again...</div>
+        </div>
+    </div>
+
+    <script>
+        // Eye types and colors
+        const eyeTypes = ['normal', 'slit', 'round', 'jagged'];
+        const eyeColors = {
+            red: {
+                border: '#dc2626',
+                glow: '#ff0000',
+                pupil: '#dc2626'
+            },
+            yellow: {
+                border: '#ca8a04',
+                glow: '#ffff00',
+                pupil: '#ca8a04'
+            },
+            green: {
+                border: '#16a34a',
+                glow: '#00ff00',
+                pupil: '#16a34a'
+            }
+        };
+
+        // URL for eyeball clicks
+        const eyeballLink = "https://sites.google.com/view/eyeswatchingu/home";
+
+        // State
+        let eyes = [];
+        let resizeTimeout;
+
+        // DOM Elements
+        const container = document.querySelector('.container');
+        const eyesContainer = document.getElementById('eyesContainer');
+        const powerButton = document.getElementById('powerButton');
+        const grayCircle = document.querySelector('.gray-circle');
+
+        // Generate random eyes
+        function generateEyes() {
+            // Clear existing eyes
+            eyesContainer.innerHTML = '';
+            eyes = [];
+
+            // Get container dimensions
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+
+            // Determine number of eyes based on screen size
+            const eyeCount = containerWidth < 768 ? 8 : containerWidth < 1024 ? 10 : 12;
+
+            // Create a grid to prevent eyes from overlapping too much
+            const gridSize = Math.sqrt(eyeCount) + 1;
+            const cellWidth = containerWidth / gridSize;
+            const cellHeight = containerHeight / gridSize;
+
+            // Define center area to avoid (for the button)
+            const centerX = containerWidth / 2;
+            const centerY = containerHeight / 2;
+            const minDimension = Math.min(containerWidth, containerHeight);
+            const avoidRadius = minDimension * 0.15; // 15% of the smallest dimension
+
+            for (let i = 0; i < eyeCount; i++) {
+                // Calculate grid position
+                const gridX = i % gridSize;
+                const gridY = Math.floor(i / gridSize);
+
+                // Add randomness within the grid cell
+                const offsetX = Math.random() * cellWidth * 0.8;
+                const offsetY = Math.random() * cellHeight * 0.8;
+
+                // Calculate final position
+                let x = gridX * cellWidth + offsetX;
+                let y = gridY * cellHeight + offsetY;
+
+                // Check if the eye is too close to the center, if so, move it away
+                const distanceToCenter = Math.hypot(x - centerX, y - centerY);
+                if (distanceToCenter < avoidRadius) {
+                    // Move the eye away from center
+                    const angle = Math.atan2(y - centerY, x - centerX);
+                    const newDistance = avoidRadius + Math.random() * (minDimension * 0.05);
+                    x = centerX + Math.cos(angle) * newDistance;
+                    y = centerY + Math.sin(angle) * newDistance;
+                }
+
+                // Adjust eye size based on screen dimensions
+                const sizeFactor = minDimension / 1000; // Scale factor based on screen size
+
+                // Random size (larger eyes are less common)
+                const sizeRandom = Math.random();
+                let size;
+                if (sizeRandom > 0.9) {
+                    // Extra large eyes (10%)
+                    size = (Math.random() * 60 + 120) * sizeFactor;
+                } else if (sizeRandom > 0.7) {
+                    // Large eyes (20%)
+                    size = (Math.random() * 40 + 80) * sizeFactor;
+                } else if (sizeRandom > 0.4) {
+                    // Medium eyes (30%)
+                    size = (Math.random() * 30 + 50) * sizeFactor;
+                } else {
+                    // Small eyes (40%)
+                    size = (Math.random() * 20 + 30) * sizeFactor;
+                }
+
+                // Ensure minimum size
+                size = Math.max(size, 20);
+
+                // Random type with weighted distribution
+                const typeRandom = Math.random();
+                let type;
+                if (typeRandom > 0.7) {
+                    type = eyeTypes[Math.floor(Math.random() * eyeTypes.length)];
+                } else {
+                    // Normal eyes are more common
+                    type = 'normal';
+                }
+
+                // Random color with weighted distribution (red is most common)
+                const colorRandom = Math.random();
+                let color;
+                if (colorRandom > 0.7) {
+                    color = Object.keys(eyeColors)[Math.floor(Math.random() * Object.keys(eyeColors).length)];
+                } else {
+                    color = 'red';
+                }
+
+                // Random blink and look speeds
+                const blinkSpeed = Math.random() * 5000 + 3000; // 3-8 seconds
+                const lookSpeed = Math.random() * 2000 + 1000; // 1-3 seconds
+
+                // Random rotation
+                const rotation = Math.random() * 40 - 20; // -20 to 20 degrees
+
+                // Create eye
+                createEye({
+                    x,
+                    y,
+                    size,
+                    type,
+                    color,
+                    blinkSpeed,
+                    lookSpeed,
+                    rotation
+                });
+            }
+        }
+
+        // Create a single eye
+        function createEye(eyeProps) {
+            const { x, y, size, type, color, blinkSpeed, lookSpeed, rotation } = eyeProps;
+
+            // Create eye elements
+            const eye = document.createElement('div');
+            eye.className = 'eye';
+            eye.style.left = `${x}px`;
+            eye.style.top = `${y}px`;
+            eye.style.width = `${size}px`;
+            eye.style.height = `${size * 0.6}px`;
+            eye.style.transform = `translate(${Math.random() > 0.5 ? '-' : ''}50px, ${Math.random() > 0.5 ? '-' : ''}50px) rotate(${rotation}deg)`;
+            eye.style.zIndex = Math.floor(size);
+
+            // Make eye clickable
+            eye.addEventListener('click', function() {
+                window.location.href = eyeballLink;
+            });
+
+            // Create eye outline based on type
+            const eyeOutline = document.createElement('div');
+            eyeOutline.className = 'eye-outline';
+
+            const eyeInner = document.createElement('div');
+            eyeInner.className = 'eye-inner';
+
+            const colorValues = eyeColors[color];
+
+            // Style based on eye type
+            switch (type) {
+                case 'slit':
+                    eyeOutline.style.border = `2px solid ${colorValues.border}`;
+                    eyeOutline.style.boxShadow = `0 0 10px ${colorValues.glow}`;
+                    eyeOutline.style.height = '100%';
+                    break;
+                case 'round':
+                    eyeOutline.style.border = `4px solid ${colorValues.border}`;
+                    eyeOutline.style.boxShadow = `0 0 15px ${colorValues.glow}`;
+                    break;
+                case 'jagged':
+                    eyeOutline.style.clipPath = "polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%)";
+                    eyeOutline.style.border = `3px solid ${colorValues.border}`;
+                    eyeOutline.style.boxShadow = `0 0 12px ${colorValues.glow}`;
+                    break;
+                default: // normal
+                    eyeOutline.style.border = `2px solid ${colorValues.border}`;
+                    eyeOutline.style.boxShadow = `0 0 10px ${colorValues.glow}`;
+                    eyeOutline.style.height = '100%';
+            }
+
+            eyeOutline.appendChild(eyeInner);
+            eye.appendChild(eyeOutline);
+
+            // Create pupil
+            const pupil = document.createElement('div');
+            pupil.className = 'pupil';
+            pupil.style.width = `${size * 0.3}px`;
+            pupil.style.height = `${size * 0.3}px`;
+            pupil.style.left = '50%';
+            pupil.style.top = '50%';
+            pupil.style.backgroundColor = colorValues.pupil;
+            pupil.style.boxShadow = `0 0 8px ${colorValues.glow}`;
+            pupil.style.filter = 'brightness(1.5)';
+
+            // Pupil highlight
+            const pupilHighlight = document.createElement('div');
+            pupilHighlight.className = 'pupil-highlight';
+            pupilHighlight.style.width = `${size * 0.1}px`;
+            pupilHighlight.style.height = `${size * 0.1}px`;
+            pupilHighlight.style.left = '25%';
+            pupilHighlight.style.top = '25%';
+
+            pupil.appendChild(pupilHighlight);
+            eye.appendChild(pupil);
+
+            // Create twinkling effect
+            const twinkle = document.createElement('div');
+            twinkle.className = 'eye-twinkle';
+            twinkle.style.background = `radial-gradient(circle, transparent 60%, ${color === 'red' ? 'rgba(255,0,0,0.1)' : color === 'yellow' ? 'rgba(255,255,0,0.1)' : 'rgba(0,255,0,0.1)'} 100%)`;
+            twinkle.style.animation = `twinkle-${Math.floor(Math.random() * 3) + 1} ${Math.random() * 2 + 2}s infinite alternate`;
+
+            eye.appendChild(twinkle);
+            eyesContainer.appendChild(eye);
+
+            // Add to eyes array
+            eyes.push({
+                element: eye,
+                outline: eyeOutline,
+                pupil,
+                blinkSpeed,
+                lookSpeed,
+                size,
+                isOpen: true
+            });
+
+            // Start animations
+            setTimeout(() => {
+                eye.style.opacity = '1';
+                eye.style.transform = `translate(0, 0) rotate(${rotation}deg)`;
+            }, Math.random() * 500);
+
+            // Start blinking
+            startBlinking(eyes[eyes.length - 1]);
+
+            // Start pupil movement
+            startPupilMovement(eyes[eyes.length - 1]);
+        }
+
+        // Handle blinking animation
+        function startBlinking(eye) {
+            const blink = () => {
+                eye.isOpen = false;
+
+                // Handle different eye types
+                if (eye.outline.style.clipPath) {
+                    // Jagged eye
+                    eye.outline.style.opacity = '0';
+                } else if (eye.outline.style.border.includes('4px')) {
+                    // Round eye
+                    eye.outline.style.transform = 'scale(0)';
+                } else {
+                    // Normal or slit eye
+                    eye.outline.style.height = '2px';
+                }
+
+                // Hide pupil during blink
+                eye.pupil.style.opacity = '0';
+
+                // Open after a short delay
+                setTimeout(() => {
+                    eye.isOpen = true;
+
+                    // Handle different eye types
+                    if (eye.outline.style.clipPath) {
+                        // Jagged eye
+                        eye.outline.style.opacity = '1';
+                    } else if (eye.outline.style.border.includes('4px')) {
+                        // Round eye
+                        eye.outline.style.transform = 'scale(1)';
+                    } else {
+                        // Normal or slit eye
+                        eye.outline.style.height = '100%';
+                    }
+
+                    // Show pupil after opening
+                    eye.pupil.style.opacity = '1';
+                }, 200);
+            };
+
+            // Set interval for blinking
+            const blinkInterval = setInterval(blink, eye.blinkSpeed);
+
+            // Store interval for cleanup
+            eye.blinkInterval = blinkInterval;
+        }
+
+        // Handle pupil movement
+        function startPupilMovement(eye) {
+            // Random movement
+            const moveRandomly = () => {
+                const randomX = (Math.random() - 0.5) * 2 * (eye.size / 4);
+                const randomY = (Math.random() - 0.5) * 2 * (eye.size / 4);
+
+                eye.pupil.style.transform = `translate(-50%, -50%) translate(${randomX}px, ${randomY}px)`;
+            };
+
+            // Set interval for random movement
+            const moveInterval = setInterval(moveRandomly, eye.lookSpeed);
+
+            // Store interval for cleanup
+            eye.moveInterval = moveInterval;
+        }
+
+        // Handle mouse tracking for all eyes
+        function setupMouseTracking() {
+            document.addEventListener('mousemove', (e) => {
+                eyes.forEach(eye => {
+                    if (!eye.isOpen) return;
+
+                    const eyeRect = eye.element.getBoundingClientRect();
+                    const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+                    const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+
+                    // Calculate angle and distance
+                    const angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
+                    const distance = Math.min(
+                        Math.hypot(e.clientX - eyeCenterX, e.clientY - eyeCenterY) / 15,
+                        eye.size / 4
+                    );
+
+                    // Calculate new position with some randomness
+                    const newX = Math.cos(angle) * distance;
+                    const newY = Math.sin(angle) * distance;
+
+                    eye.pupil.style.transform = `translate(-50%, -50%) translate(${newX + (Math.random() - 0.5) * 3}px, ${newY + (Math.random() - 0.5) * 3}px)`;
+                });
+            });
+        }
+
+        // Handle window resize
+        function handleResize() {
+            // Clear timeout if it exists
+            if (resizeTimeout) {
+                clearTimeout(resizeTimeout);
+            }
+
+            // Set a timeout to prevent too many regenerations
+            resizeTimeout = setTimeout(() => {
+                // Fade out
+                eyesContainer.style.opacity = '0';
+
+                // Clear all eyes and their intervals
+                eyes.forEach(eye => {
+                    clearInterval(eye.blinkInterval);
+                    clearInterval(eye.moveInterval);
+                });
+
+                // Regenerate after fade out
+                setTimeout(() => {
+                    generateEyes();
+                    eyesContainer.style.opacity = '1';
+                }, 500);
+            }, 200);
+        }
+
+        // Initialize
+        function init() {
+            // Generate initial eyes
+            generateEyes();
+
+            // Setup mouse tracking
+            setupMouseTracking();
+
+            // Add event listeners
+            window.addEventListener('resize', handleResize);
+        }
+
+        // Start when the page is loaded
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
